@@ -1,0 +1,16 @@
+version: "3.8"
+
+services:
+  backend:
+    container_name: momofin-ewallet
+    build: .
+    image: momofin-purchase-order
+    ports:
+      - "9010:9010"
+    environment:
+      - NODE_ENV=${NODE_ENV}
+      - SERVER_PORT=${SERVER_PORT}
+      - MONGO_DB_URL=${MONGO_DB_URL}
+      - COMPANY_API=${COMPANY_API}
+      - JWT_SECRET_KEY=${JWT_SECRET_KEY}
+      - JWT_ADMIN_SECRET_KEY=${JWT_ADMIN_SECRET_KEY}
