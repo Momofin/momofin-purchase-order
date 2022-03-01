@@ -1,5 +1,5 @@
 const jwt = require('jsonwebtoken')
-// const { Env } = require('../../config/env-loader')
+const { Env } = require('../../config/env-loader')
 const { errorResponse } = require('../../helper/response')
 
 const auth = (req, res, next) => {
@@ -9,7 +9,7 @@ const auth = (req, res, next) => {
   }
   const token = authorization.split(' ')[1]
   try {
-    const decoded = jwt.verify(token, "") // TODO: Env().JWT_SECRET_KEY
+    const decoded = jwt.verify(token, Env().JWT_SECRET_KEY) 
     req.user = decoded
   } catch (err) {
     return res
@@ -26,7 +26,7 @@ const authAdmin = (req, res, next) => {
   }
   const token = authorization.split(' ')[1]
   try {
-    const decoded = jwt.verify(token, "") // TODO: Env().JWT_ADMIN_SECRET_KEY
+    const decoded = jwt.verify(token, Env().JWT_ADMIN_SECRET_KEY) 
     req.user = decoded
   } catch (err) {
     return res

@@ -19,7 +19,7 @@ class PurchaseOrderService {
         const authorize = req.headers.authorization
         const body = req.body
         try {
-            const user = await request('GET', '/', '', id, authorize)
+            const user = await request('GET', '/', '', '', authorize)
             const company = CompanyDto
             company.id = user.data._id
             company.image = user.data.image

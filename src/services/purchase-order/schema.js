@@ -66,7 +66,6 @@ PurchaseOrderSchema.pre('save', function (next) {
             return next(error);
 
         doc.order_id = 'PO-' + padLeadingZeros(counter.value.seq, 5)
-        console.log(doc.order_id)
         next();
     });
 });
