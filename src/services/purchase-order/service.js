@@ -18,6 +18,7 @@ class PurchaseOrderService {
     async create(req, res) {
         const authorize = req.headers.authorization
         const body = req.body
+        console.log(body)
         try {
             const user = await request('GET', '/', '', '', authorize)
             const company = CompanyDto
@@ -25,7 +26,7 @@ class PurchaseOrderService {
             company.image = user.data.image
             company.name = user.data.name
             const items = []
-            body.forEach(value => {
+            body.items.forEach(value => {
                 const item = new ItemDto()
                 item.item_name = value.item_name
                 item.qty = value.qty
@@ -40,9 +41,13 @@ class PurchaseOrderService {
 
             const dto = PurchaseOrderDTO
             dto.order_date = new Date()
+            dto.expiry_date = new Date()
+            dto.wallet_type = body.wallet_type
+            dto.expiry_date.setDate(dto.expiry_date.getDate() + 1)
             dto.company = company
             dto.items = items
             dto.payment_status = 'unpaid'
+            dto.order_status = 'pending'
             dto.created_at = new Date()
             dto.updated_at = null
             dto.deleted_at = null

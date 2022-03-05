@@ -6,6 +6,7 @@ const { auth, authAdmin } = require('./src/services/middleware/auth')
 const dbConn = require('./src/database/db')
 const cors = require('cors')
 const purchaseOrderRoutes = require('./src/services/purchase-order/controller')
+const adminOrderRoutes = require('./src/services/purchase-order/adminController')
 const { SERVER_PORT } = Env()
 
 // // test database connection
@@ -18,7 +19,10 @@ app.use(bodyParser.json())
 app.use(cors())
 
 const prefixPath = '/v1/order'
+// user routes
 app.use(prefixPath + '/', auth, purchaseOrderRoutes)
+// admin routes
+app.use(prefixPath + '/admin/', authAdmin, adminOrderRoutes)
 
 // test app
 app.get('/', (req, res) => {

@@ -31,14 +31,27 @@ const PurchaseOrderSchema = mongoose.Schema({
         type: Date,
         required: true
     },
+    expiry_date: {
+        type: Date,
+        required: true
+    },
     company: {
         type: Object,
+        required: true
+    },
+    wallet_type: {
+        type: String,
         required: true
     },
     items: [itemSchema],
     payment_status: {
         type: String,
         enum: ['unpaid', 'paid', 'expired', 'refunded'],
+        required: true
+    },
+    order_status: {
+        type: String,
+        enum: ['completed', 'pending', 'canceled'],
         required: true
     },
     created_at: {
