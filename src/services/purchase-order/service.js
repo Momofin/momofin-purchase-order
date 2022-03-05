@@ -18,7 +18,6 @@ class PurchaseOrderService {
     async create(req, res) {
         const authorize = req.headers.authorization
         const body = req.body
-        console.log(body)
         try {
             const user = await request('GET', '/', '', '', authorize)
             const company = CompanyDto
@@ -61,14 +60,28 @@ class PurchaseOrderService {
     }
 
     async getAll(req, res) {
-        // const userid = req.user.id
-
-        // if user id not an admin, user only query by users company
-        // if userid != 'admin'{
-        //     req.query.company = 'coba'
-        // }
-
         try {
+            const data = await purchaseOrderRepository.findAllBy(req.query)
+            if (data < 1) {
+                res.status(404)
+                return res.send(errorResponse(404, 'order tidak ditemukan'))
+            }
+            return res.send(successResponse(data))
+        } catch (error) {
+            res.status(400)
+            return res.send(errorResponse(400, error.message))
+        }
+    }
+
+    async getByCompany(req, res) {
+        const authorize = req.headers.authorization
+        try {
+            const user = await request('GET', '/', '', '', authorize)
+            const company = CompanyDto
+            company.id = user.data._id
+            company.image = user.data.image
+            company.name = user.data.name
+            req.query.company = company
             const data = await purchaseOrderRepository.findAllBy(req.query)
             if (data < 1) {
                 res.status(404)
