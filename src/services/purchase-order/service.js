@@ -15,6 +15,46 @@ const { request } = require('../../helper/http-request')
 */
 
 class PurchaseOrderService {
+    async getOne (req, res) {
+        const params = req.params.id
+        try {
+          const data = await purchaseOrderRepository.getOneById(params)
+          if (!data) {
+            res.status(404)
+            return res.send(errorResponse(404, 'order tidak ditemukan'))
+          }
+          return res.send(successResponse(data))
+        } catch (error) {
+          res.status(400)
+          return res.send(errorResponse(400, error.message))
+        }
+      }
+
+      async update(req, res) {
+        const {
+                order_status: orderStatus,
+                payment_status: paymentStatus,
+                } = req.body
+        const params = req.params.id
+        try {
+            const data = await purchaseOrderRepository.getOneById(params)
+            if (!data) {
+              res.status(404)
+              return res.send(errorResponse(404, 'order tidak ditemukan'))
+            }
+            
+            data.payment_status = paymentStatus
+            data.order_status = orderStatus
+            data.created_at = new Date()
+            data.updated_at = new Date()
+            await purchaseOrderRepository.updateByID(params, data)
+            return res.send(successResponse(`request berhasil di update`))
+        } catch (error) {
+            res.status(400)
+            return res.send(errorResponse(400, error.message))
+        }
+    }
+
     async create(req, res) {
         const authorize = req.headers.authorization
         const body = req.body

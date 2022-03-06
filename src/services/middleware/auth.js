@@ -14,7 +14,7 @@ const auth = (req, res, next) => {
   } catch (err) {
     return res
       .status(403)
-      .send(errorResponse(403, 'Forbidden, invalid token'))
+      .send(errorResponse(403, err.message))
   }
   return next()
 }
@@ -31,7 +31,7 @@ const authAdmin = (req, res, next) => {
   } catch (err) {
     return res
       .status(403)
-      .send(errorResponse(403, 'Forbidden, invalid token'))
+      .send(errorResponse(403, err.message))
   }
   return next()
 }

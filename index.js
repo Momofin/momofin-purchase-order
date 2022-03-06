@@ -20,7 +20,7 @@ app.use(cors())
 
 const prefixPath = '/v1/order'
 // user routes
-app.use(prefixPath + '/', auth, purchaseOrderRoutes)
+app.use(prefixPath + '/wallet/', auth, purchaseOrderRoutes)
 // admin routes
 app.use(prefixPath + '/admin/', authAdmin, adminOrderRoutes)
 
@@ -29,6 +29,6 @@ app.get('/', (req, res) => {
     res.send({ message: 'its running' })
 }) // TODO: auth
 
-app.listen(5000, () => {
+app.listen(SERVER_PORT, () => {
     console.log('Server running on port: ', SERVER_PORT)
 })

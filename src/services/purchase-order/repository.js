@@ -29,6 +29,22 @@ class PurchaseOrderRepository {
     }
 
   }
+
+  async getOneById (objectId) {
+    try {
+      return this.db.findById(objectId)
+    } catch (error) {
+      return error
+    }
+  }
+
+  async updateByID (objectId, dto) {
+    try {
+      return this.db.findByIdAndUpdate(objectId, dto)
+    } catch (error) {
+      return error
+    }
+  }
 }
 
 module.exports = new PurchaseOrderRepository(purchaseOrderSchema)
