@@ -1,5 +1,5 @@
 class PurchaseOrderDto {
-  constructor(order_id, order_date, expiry_date, company, wallet_type, items, payment_status, order_status, createdAt, updatedAt, deletedAt) {
+  constructor (order_id, order_date, expiry_date, company, wallet_type, items, payment_status, order_status, createdAt, updatedAt, deletedAt) {
     this.order_id = order_id
     this.order_date = order_date
     this.expiry_date = expiry_date
@@ -15,7 +15,7 @@ class PurchaseOrderDto {
 }
 
 class ItemDto {
-  constructor(item_name, qty, amount) {
+  constructor (item_name, qty, amount) {
     this.item_name = item_name
     this.qty = qty
     this.amount = amount

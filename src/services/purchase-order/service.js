@@ -1,7 +1,7 @@
 const {
-    successResponse,
-    errorResponse,
-    errorValidation
+  successResponse,
+  errorResponse,
+  errorValidation
 } = require('../../helper/response')
 const purchaseOrderRepository = require('./repository')
 const PurchaseOrderDTO = require('./dto')
@@ -15,124 +15,124 @@ const { request } = require('../../helper/http-request')
 */
 
 class PurchaseOrderService {
-    async getOne (req, res) {
-        const params = req.params.id
-        try {
-          const data = await purchaseOrderRepository.getOneById(params)
-          if (!data) {
-            res.status(404)
-            return res.send(errorResponse(404, 'order tidak ditemukan'))
-          }
-          return res.send(successResponse(data))
-        } catch (error) {
-          res.status(400)
-          return res.send(errorResponse(400, error.message))
-        }
+  async getOne (req, res) {
+    const params = req.params.id
+    try {
+      const data = await purchaseOrderRepository.getOneById(params)
+      if (!data) {
+        res.status(404)
+        return res.send(errorResponse(404, 'order tidak ditemukan'))
+      }
+      return res.send(successResponse(data))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
+    }
+  }
+
+  async update (req, res) {
+    const {
+      order_status: orderStatus,
+      payment_status: paymentStatus
+    } = req.body
+    const params = req.params.id
+    try {
+      const data = await purchaseOrderRepository.getOneById(params)
+      if (!data) {
+        res.status(404)
+        return res.send(errorResponse(404, 'order tidak ditemukan'))
       }
 
-      async update(req, res) {
-        const {
-                order_status: orderStatus,
-                payment_status: paymentStatus,
-                } = req.body
-        const params = req.params.id
-        try {
-            const data = await purchaseOrderRepository.getOneById(params)
-            if (!data) {
-              res.status(404)
-              return res.send(errorResponse(404, 'order tidak ditemukan'))
-            }
-            
-            data.payment_status = paymentStatus
-            data.order_status = orderStatus
-            data.created_at = new Date()
-            data.updated_at = new Date()
-            await purchaseOrderRepository.updateByID(params, data)
-            return res.send(successResponse(`request berhasil di update`))
-        } catch (error) {
-            res.status(400)
-            return res.send(errorResponse(400, error.message))
-        }
+      data.payment_status = paymentStatus
+      data.order_status = orderStatus
+      data.created_at = new Date()
+      data.updated_at = new Date()
+      await purchaseOrderRepository.updateByID(params, data)
+      return res.send(successResponse('request berhasil di update'))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
     }
+  }
 
-    async create(req, res) {
-        const authorize = req.headers.authorization
-        const body = req.body
-        try {
-            const user = await request('GET', '/', '', '', authorize)
-            const company = CompanyDto
-            company.id = user.data._id
-            company.image = user.data.image
-            company.name = user.data.name
-            const items = []
-            body.items.forEach(value => {
-                const item = new ItemDto()
-                item.item_name = value.item_name
-                item.qty = value.qty
-                if (value.item_name == "emet") {
-                    item.amount = value.qty * 10000
-                }
-                if (value.item_name == "esgn") {
-                    item.amount = value.qty * 3000
-                }
-                items.push(item)
-            });
-
-            const dto = PurchaseOrderDTO
-            dto.order_date = new Date()
-            dto.expiry_date = new Date()
-            dto.wallet_type = body.wallet_type
-            dto.expiry_date.setDate(dto.expiry_date.getDate() + 1)
-            dto.company = company
-            dto.items = items
-            dto.payment_status = 'unpaid'
-            dto.order_status = 'pending'
-            dto.created_at = new Date()
-            dto.updated_at = null
-            dto.deleted_at = null
-
-            await purchaseOrderRepository.create(dto)
-            return res.send(successResponse(`request berhasil di buat`))
-        } catch (error) {
-            res.status(400)
-            return res.send(errorResponse(400, error.message))
+  async create (req, res) {
+    const authorize = req.headers.authorization
+    const body = req.body
+    try {
+      const user = await request('GET', '/', '', '', authorize)
+      const company = CompanyDto
+      company.id = user.data._id
+      company.image = user.data.image
+      company.name = user.data.name
+      const items = []
+      body.items.forEach(value => {
+        const item = new ItemDto()
+        item.item_name = value.item_name
+        item.qty = value.qty
+        if (value.item_name == 'emet') {
+          item.amount = value.qty * 10000
         }
-    }
-
-    async getAll(req, res) {
-        try {
-            const data = await purchaseOrderRepository.findAllBy(req.query)
-            if (data < 1) {
-                res.status(404)
-                return res.send(errorResponse(404, 'order tidak ditemukan'))
-            }
-            return res.send(successResponse(data))
-        } catch (error) {
-            res.status(400)
-            return res.send(errorResponse(400, error.message))
+        if (value.item_name == 'esgn') {
+          item.amount = value.qty * 3000
         }
-    }
+        items.push(item)
+      })
 
-    async getByCompany(req, res) {
-        const authorize = req.headers.authorization
-        try {
-            const user = await request('GET', '/', '', '', authorize)
-            const company = CompanyDto
-            company.id = user.data._id
-            company.image = user.data.image
-            company.name = user.data.name
-            req.query.company = company
-            const data = await purchaseOrderRepository.findAllBy(req.query)
-            if (data < 1) {
-                res.status(404)
-                return res.send(errorResponse(404, 'order tidak ditemukan'))
-            }
-            return res.send(successResponse(data))
-        } catch (error) {
-            res.status(400)
-            return res.send(errorResponse(400, error.message))
-        }
+      const dto = PurchaseOrderDTO
+      dto.order_date = new Date()
+      dto.expiry_date = new Date()
+      dto.wallet_type = body.wallet_type
+      dto.expiry_date.setDate(dto.expiry_date.getDate() + 1)
+      dto.company = company
+      dto.items = items
+      dto.payment_status = 'unpaid'
+      dto.order_status = 'pending'
+      dto.created_at = new Date()
+      dto.updated_at = null
+      dto.deleted_at = null
+
+      await purchaseOrderRepository.create(dto)
+      return res.send(successResponse('request berhasil di buat'))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
     }
+  }
+
+  async getAll (req, res) {
+    try {
+      const data = await purchaseOrderRepository.findAllBy(req.query)
+      if (data < 1) {
+        res.status(404)
+        return res.send(errorResponse(404, 'order tidak ditemukan'))
+      }
+      return res.send(successResponse(data))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
+    }
+  }
+
+  async getByCompany (req, res) {
+    const authorize = req.headers.authorization
+    try {
+      const user = await request('GET', '/', '', '', authorize)
+      const company = CompanyDto
+      company.id = user.data._id
+      company.image = user.data.image
+      company.name = user.data.name
+      req.query.company = company
+      const data = await purchaseOrderRepository.findAllBy(req.query)
+      if (data < 1) {
+        res.status(404)
+        return res.send(errorResponse(404, 'order tidak ditemukan'))
+      }
+      return res.send(successResponse(data))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
+    }
+  }
 }
 
 module.exports = new PurchaseOrderService()

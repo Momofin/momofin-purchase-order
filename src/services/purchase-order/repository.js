@@ -1,11 +1,11 @@
 const purchaseOrderSchema = require('./schema')
 
 class PurchaseOrderRepository {
-  constructor(db) {
+  constructor (db) {
     this.db = db
   }
 
-  async create(dto) {
+  async create (dto) {
     try {
       return this.db.create(dto)
     } catch (error) {
@@ -13,7 +13,7 @@ class PurchaseOrderRepository {
     }
   }
 
-  async find() {
+  async find () {
     try {
       return this.db.find()
     } catch (error) {
@@ -21,13 +21,12 @@ class PurchaseOrderRepository {
     }
   }
 
-  async findAllBy(Object) {
+  async findAllBy (Object) {
     try {
       return this.db.find(Object)
     } catch (error) {
       return error
     }
-
   }
 
   async getOneById (objectId) {

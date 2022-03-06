@@ -10,8 +10,8 @@ const adminOrderRoutes = require('./src/services/purchase-order/adminController'
 const { SERVER_PORT } = Env()
 
 // // test database connection
-function dbTestConnection() {
-    return dbConn;
+function dbTestConnection () {
+  return dbConn
 }
 
 dbTestConnection()
@@ -26,9 +26,9 @@ app.use(prefixPath + '/admin/', authAdmin, adminOrderRoutes)
 
 // test app
 app.get('/', (req, res) => {
-    res.send({ message: 'its running' })
+  res.send({ message: 'its running' })
 }) // TODO: auth
 
 app.listen(SERVER_PORT, () => {
-    console.log('Server running on port: ', SERVER_PORT)
+  console.log('Server running on port: ', SERVER_PORT)
 })
