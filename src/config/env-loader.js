@@ -7,7 +7,8 @@ const Env = () => ({
   MONGO_DB_URL: process.env.MONGO_DB_URL,
   JWT_SECRET_KEY: process.env.JWT_SECRET_KEY,
   JWT_ADMIN_SECRET_KEY: process.env.JWT_ADMIN_SECRET_KEY,
-  COMPANY_API: process.env.COMPANY_API
+  COMPANY_API: process.env.COMPANY_API,
+  TRANSACTION_API: process.env.TRANSACTION_API
 })
 
 module.exports = {

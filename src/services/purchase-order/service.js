@@ -7,7 +7,10 @@ const purchaseOrderRepository = require('./repository')
 const PurchaseOrderDTO = require('./dto')
 const { ItemDto } = require('./dto')
 const CompanyDto = require('../../dto/company')
+const HistoryDto = require('../../dto/history')
 const { request } = require('../../helper/http-request')
+const { Env } = require('../../config/env-loader')
+const { COMPANY_API, TRANSACTION_API } = Env()
 
 /**
 * @param {Request} req - express request
@@ -33,7 +36,9 @@ class PurchaseOrderService {
   async update (req, res) {
     const {
       order_status: orderStatus,
-      payment_status: paymentStatus
+      company,
+      wallet_type : walletType,
+      authorize
     } = req.body
     const params = req.params.id
     try {
@@ -42,8 +47,17 @@ class PurchaseOrderService {
         res.status(404)
         return res.send(errorResponse(404, 'order tidak ditemukan'))
       }
-
-      data.payment_status = paymentStatus
+      if(orderStatus === "approve"){
+        for (let index = 0; index < walletType.length; index++) {
+          const history = new HistoryDto()
+          history.type = 'wallet'
+          history.name = walletType[index]
+          history.status = 'CR'
+          history.company = company
+          history.timestamp = new Date()
+          request('POST', TRANSACTION_API + '/admin/history', history, '', authorize)
+        }
+      }
       data.order_status = orderStatus
       data.created_at = new Date()
       data.updated_at = new Date()
@@ -59,7 +73,7 @@ class PurchaseOrderService {
     const authorize = req.headers.authorization
     const body = req.body
     try {
-      const user = await request('GET', '/', '', '', authorize)
+      const user = await request('GET', COMPANY_API, '', '', authorize)
       const company = CompanyDto
       company.id = user.data._id
       company.image = user.data.image
@@ -116,7 +130,7 @@ class PurchaseOrderService {
   async getByCompany (req, res) {
     const authorize = req.headers.authorization
     try {
-      const user = await request('GET', '/', '', '', authorize)
+      const user = await request('GET', COMPANY_API, '', '', authorize)
       const company = CompanyDto
       company.id = user.data._id
       company.image = user.data.image
