@@ -24,7 +24,9 @@
     "express": "^4.17.3",
     "jsonwebtoken": "^8.5.1",
     "mongoose": "^6.2.3",
-    "nano-time": "^1.0.0"
+    "mongoose-paginate-v2": "^1.6.3",
+    "nano-time": "^1.0.0",
+    "omit-empty": "^1.0.0"
   },
   "devDependencies": {
     "eslint-config-standard": "^16.0.3",
