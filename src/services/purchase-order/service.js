@@ -119,8 +119,8 @@ class PurchaseOrderService {
 
         // build pagination
         const options = {
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10)
+            offset: parseInt(offset, 10) || 0,
+            limit: parseInt(limit, 10) || 10
         }
 
         // build query for find all
@@ -147,8 +147,8 @@ class PurchaseOrderService {
 
         // build pagination
         const options = {
-            offset: parseInt(offset, 10),
-            limit: parseInt(limit, 10)
+            offset: parseInt(offset, 10) || 0,
+            limit: parseInt(limit, 10) || 10
         }
 
         try {
