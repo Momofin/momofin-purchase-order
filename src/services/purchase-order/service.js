@@ -85,11 +85,12 @@ class PurchaseOrderService {
                 const item = new ItemDto()
                 item.item_name = value.item_name
                 item.qty = value.qty
+                item.amount = value.unit_price
                 if (value.item_name == 'emet') {
-                    item.amount = value.qty * 10000
+                    item.total_amount = value.qty * value.unit_price
                 }
                 if (value.item_name == 'esgn') {
-                    item.amount = value.qty * 3000
+                    item.total_amount = value.qty * value.unit_price
                 }
                 items.push(item)
             })

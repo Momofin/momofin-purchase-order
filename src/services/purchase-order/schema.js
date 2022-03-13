@@ -21,6 +21,10 @@ const itemSchema = mongoose.Schema({
   amount: {
     type: Number,
     required: true
+  },
+  total_amount: {
+    type: Number,
+    required: true
   }
 })
 
