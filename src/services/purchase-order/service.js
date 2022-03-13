@@ -132,8 +132,7 @@ class PurchaseOrderService {
         try {
             const data = await purchaseOrderRepository.findAllBy(omitEmpty(query), options)
             if (data < 1) {
-                res.status(404)
-                return res.send(errorResponse(404, 'order tidak ditemukan'))
+                return res.send(successResponse([]))
             }
             return res.send(paginateResponse(
                 data.docs,
@@ -172,8 +171,7 @@ class PurchaseOrderService {
             }
             const data = await purchaseOrderRepository.findAllBy(omitEmpty(query), options)
             if (data < 1) {
-                res.status(404)
-                return res.send(errorResponse(404, 'order tidak ditemukan'))
+                return res.send(successResponse([]))
             }
             return res.send(paginateResponse(
                 data.docs,
