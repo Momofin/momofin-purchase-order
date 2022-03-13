@@ -1,6 +1,4 @@
 const axios = require('axios').default
-const { Env } = require('../config/env-loader')
-const { COMPANY_API } = Env()
 
 async function request (method, path, dto, params = '', authorize) {
   try {
@@ -8,7 +6,7 @@ async function request (method, path, dto, params = '', authorize) {
       headers: { authorization: authorize },
       params: params,
       method,
-      url: COMPANY_API + path,
+      url: path,
       data: dto
     })).data
     return data

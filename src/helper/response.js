@@ -1,54 +1,54 @@
 const successResponse = (data, message = 'success') => {
-    const response = {
-      status: 200,
-      message,
-      validation: {},
-      data
-    }
-  
-    return response
+  const response = {
+    status: 200,
+    message,
+    validation: {},
+    data
   }
-  
-  const errorResponse = (status, message, validationErrors = {}) => {
-    const response = {
-      status,
-      message,
-      validation: validationErrors,
-      data: {}
-    }
-  
-    return response
+
+  return response
+}
+
+const errorResponse = (status, message, validationErrors = {}) => {
+  const response = {
+    status,
+    message,
+    validation: validationErrors,
+    data: {}
   }
-  
-  const errorValidation = (validationErrors = {}, message = 'failed') => {
-    return errorResponse(404, message, validationErrors)
-  }
-  
-  const paginateResponse = (
+
+  return response
+}
+
+const errorValidation = (validationErrors = {}, message = 'failed') => {
+  return errorResponse(404, message, validationErrors)
+}
+
+const paginateResponse = (
+  data,
+  message = 'success',
+  page,
+  limit,
+  totalPage,
+  totalRow
+) => {
+  const response = {
+    status: 200,
+    message,
+    validation: {},
     data,
-    message = 'success',
     page,
     limit,
     totalPage,
     totalRow
-  ) => {
-    const response = {
-      status: 200,
-      message,
-      validation: {},
-      data,
-      page,
-      limit,
-      totalPage,
-      totalRow
-    }
-  
-    return response
   }
-  
-  module.exports = {
-    errorResponse,
-    successResponse,
-    errorValidation,
-    paginateResponse
-  }
+
+  return response
+}
+
+module.exports = {
+  errorResponse,
+  successResponse,
+  errorValidation,
+  paginateResponse
+}
