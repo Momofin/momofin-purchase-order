@@ -21,9 +21,12 @@ const { COMPANY_API, TRANSACTION_API } = Env()
 
 class PurchaseOrderService {
     async getOne(req, res) {
+        const authorize = req.headers.authorization
         const params = req.params.id
         try {
+            const user = await request('GET', COMPANY_API, '', '', authorize)
             const data = await purchaseOrderRepository.getOneById(params)
+            data.company = user.data
             if (!data) {
                 res.status(404)
                 return res.send(errorResponse(404, 'order tidak ditemukan'))
