@@ -1,5 +1,6 @@
 const {
     successResponse,
+    paginateResponse,
     errorResponse,
     errorValidation
 } = require('../../helper/response')
@@ -115,11 +116,11 @@ class PurchaseOrderService {
     }
 
     async getAll(req, res) {
-        const { offset, limit, status } = req.query
+        const { page, limit, status } = req.query
 
         // build pagination
         const options = {
-            offset: parseInt(offset, 10) || 0,
+            offset: parseInt(page, 10) || 0,
             limit: parseInt(limit, 10) || 10
         }
 
@@ -134,7 +135,13 @@ class PurchaseOrderService {
                 res.status(404)
                 return res.send(errorResponse(404, 'order tidak ditemukan'))
             }
-            return res.send(successResponse(data))
+            return res.send(paginateResponse(
+                data.docs,
+                'success',
+                data.offset,
+                data.limit,
+                data.totalPages,
+                data.totalDocs))
         } catch (error) {
             res.status(400)
             return res.send(errorResponse(400, error.message))
@@ -143,11 +150,11 @@ class PurchaseOrderService {
 
     async getByCompany(req, res) {
         const authorize = req.headers.authorization
-        const { offset, limit, status } = req.query
+        const { page, limit, status } = req.query
 
         // build pagination
         const options = {
-            offset: parseInt(offset, 10) || 0,
+            offset: parseInt(page, 10) || 0,
             limit: parseInt(limit, 10) || 10
         }
 
@@ -168,7 +175,13 @@ class PurchaseOrderService {
                 res.status(404)
                 return res.send(errorResponse(404, 'order tidak ditemukan'))
             }
-            return res.send(successResponse(data))
+            return res.send(paginateResponse(
+                data.docs,
+                'success',
+                data.offset,
+                data.limit,
+                data.totalPages,
+                data.totalDocs))
         } catch (error) {
             res.status(400)
             return res.send(errorResponse(400, error.message))
