@@ -21,12 +21,9 @@ const { COMPANY_API, TRANSACTION_API } = Env()
 
 class PurchaseOrderService {
     async getOne(req, res) {
-        const authorize = req.headers.authorization
         const params = req.params.id
         try {
-            const user = await request('GET', COMPANY_API, '', '', authorize)
             const data = await purchaseOrderRepository.getOneById(params)
-            data.company = user.data
             if (!data) {
                 res.status(404)
                 return res.send(errorResponse(404, 'order tidak ditemukan'))
@@ -167,6 +164,9 @@ class PurchaseOrderService {
             company.id = user.data._id
             company.image = user.data.image
             company.name = user.data.name
+            company.email = user.data.email
+            company.phone_number = user.data.phone
+            company.contact = user.data.pic_name
 
             // build query for find all
             const query = {
