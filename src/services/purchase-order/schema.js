@@ -1,4 +1,6 @@
 const mongoose = require('mongoose')
+const mongoosePaginate = require("mongoose-paginate-v2");
+
 const { padLeadingZeros } = require('../../helper/number')
 
 const CounterSchema = mongoose.Schema({
@@ -82,4 +84,5 @@ PurchaseOrderSchema.pre('save', function (next) {
   })
 })
 
+PurchaseOrderSchema.plugin(mongoosePaginate);
 module.exports = mongoose.model('order', PurchaseOrderSchema, 'order')

@@ -21,9 +21,9 @@ class PurchaseOrderRepository {
     }
   }
 
-  async findAllBy (Object) {
+  async findAllBy (query, option) {
     try {
-      return this.db.find(Object)
+      return this.db.paginate(query, option)
     } catch (error) {
       return error
     }
