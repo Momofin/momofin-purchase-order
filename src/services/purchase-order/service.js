@@ -85,11 +85,12 @@ class PurchaseOrderService {
                 const item = new ItemDto()
                 item.item_name = value.item_name
                 item.qty = value.qty
+                item.amount = value.unit_price
                 if (value.item_name == 'emet') {
-                    item.amount = value.qty * 10000
+                    item.total_amount = value.qty * value.unit_price
                 }
                 if (value.item_name == 'esgn') {
-                    item.amount = value.qty * 3000
+                    item.total_amount = value.qty * value.unit_price
                 }
                 items.push(item)
             })
@@ -163,6 +164,9 @@ class PurchaseOrderService {
             company.id = user.data._id
             company.image = user.data.image
             company.name = user.data.name
+            company.email = user.data.email
+            company.phone_number = user.data.phone
+            company.contact = user.data.pic_name
 
             // build query for find all
             const query = {
