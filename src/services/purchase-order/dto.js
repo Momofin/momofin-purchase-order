@@ -15,10 +15,11 @@ class PurchaseOrderDto {
 }
 
 class ItemDto {
-  constructor (item_name, qty, amount) {
+  constructor (item_name, qty, amount, total_amount) {
     this.item_name = item_name
     this.qty = qty
     this.amount = amount
+    this.total_amount = total_amount
   }
 }
 
