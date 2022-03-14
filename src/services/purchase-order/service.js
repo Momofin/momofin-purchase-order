@@ -40,6 +40,7 @@ class PurchaseOrderService {
             order_status: orderStatus,
             company,
             wallet_type: walletType,
+            payment_status: paymentStatus,
             authorize
         } = req.body
         const params = req.params.id
@@ -60,11 +61,12 @@ class PurchaseOrderService {
                     request('POST', TRANSACTION_API + '/admin/history', history, '', authorize)
                 }
             }
-            data.order_status = orderStatus
+            data.order_status = orderStatus ?? data.order_status 
+            data.payment_status = paymentStatus ?? data.payment_status
             data.created_at = new Date()
             data.updated_at = new Date()
             await purchaseOrderRepository.updateByID(params, data)
-            return res.send(successResponse('request berhasil di update'))
+            return res.send(successResponse('purchase order berhasil di update'))
         } catch (error) {
             res.status(400)
             return res.send(errorResponse(400, error.message))
