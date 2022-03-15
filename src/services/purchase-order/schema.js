@@ -1,5 +1,5 @@
 const mongoose = require('mongoose')
-const mongoosePaginate = require("mongoose-paginate-v2");
+const mongoosePaginate = require('mongoose-paginate-v2')
 
 const { padLeadingZeros } = require('../../helper/number')
 
@@ -88,5 +88,5 @@ PurchaseOrderSchema.pre('save', function (next) {
   })
 })
 
-PurchaseOrderSchema.plugin(mongoosePaginate);
+PurchaseOrderSchema.plugin(mongoosePaginate)
 module.exports = mongoose.model('order', PurchaseOrderSchema, 'order')
