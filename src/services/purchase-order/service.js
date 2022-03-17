@@ -88,11 +88,11 @@ class PurchaseOrderService {
     const body = req.body
     try {
       const user = await request('GET', COMPANY_API, '', '', authorize)
-      const company = CompanyDto      
-      if (!company.data) {
-        res.status(404)
-        return res.send(errorResponse(404, 'company tidak ditemukan'))
+      if (user.status !== 200) {
+        res.status(user.status)
+        return res.send(user)
       }
+      const company = CompanyDto      
       company.id = user.data._id
       company.image = user.data.image
       company.name = user.data.name
