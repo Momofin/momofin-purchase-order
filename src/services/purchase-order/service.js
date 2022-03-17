@@ -58,14 +58,21 @@ class PurchaseOrderService {
           history.status = 'CR'
           history.qty = items[index].qty
           history.total_amount = items[index].total_amount
-          history.description = `Incoming ${items[index].item_name}`
-          history.company = company
+          history.description = `Inbound ${items[index].item_name}`
+          history.company = company ?? data.company
+          for (let j = 0; j < data.items.length; j++) {
+              if (data.items[j].item_name == history.name) {
+                history.supplier = data.items[j].supplier
+                continue
+              }
+          }
           history.timestamp = new Date()
           request('POST', TRANSACTION_API + '/admin/history', history, '', authorize)
         }
       }
       data.order_status = orderStatus ?? data.order_status
       data.payment_status = paymentStatus ?? data.payment_status
+      data.company = company ?? data.company
       data.created_at = new Date()
       data.updated_at = new Date()
       await purchaseOrderRepository.updateByID(params, data)
@@ -81,10 +88,21 @@ class PurchaseOrderService {
     const body = req.body
     try {
       const user = await request('GET', COMPANY_API, '', '', authorize)
-      const company = CompanyDto
+      if (user.status !== 200) {
+        res.status(user.status)
+        return res.send(user)
+      }
+      if (user.data === null) {
+        res.status(404)
+        return res.send(errorResponse(404, 'company tidak ditemukan'))
+      }
+      const company = CompanyDto      
       company.id = user.data._id
       company.image = user.data.image
       company.name = user.data.name
+      company.email = user.data.email
+      company.phone_number = user.data.phone
+      company.contact = user.data.pic_name
       const items = []
       body.items.forEach(value => {
         const item = new ItemDto()
@@ -93,9 +111,11 @@ class PurchaseOrderService {
         item.amount = value.unit_price
         if (value.item_name == 'emet') {
           item.total_amount = value.qty * value.unit_price
+          item.supplier = 'peruri'
         }
         if (value.item_name == 'esgn') {
           item.total_amount = value.qty * value.unit_price
+          item.supplier = 'MTI'
         }
         items.push(item)
       })

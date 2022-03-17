@@ -25,6 +25,10 @@ const itemSchema = mongoose.Schema({
   total_amount: {
     type: Number,
     required: true
+  },
+  supplier: {
+    type: String,
+    required: true
   }
 })
 
@@ -57,7 +61,6 @@ const PurchaseOrderSchema = mongoose.Schema({
   },
   order_status: {
     type: String,
-    enum: ['completed', 'pending', 'canceled'],
     required: true
   },
   created_at: {
