@@ -92,6 +92,10 @@ class PurchaseOrderService {
         res.status(user.status)
         return res.send(user)
       }
+      if (user.data === null) {
+        res.status(404)
+        return res.send(errorResponse(404, 'order tidak ditemukan'))
+      }
       const company = CompanyDto      
       company.id = user.data._id
       company.image = user.data.image
