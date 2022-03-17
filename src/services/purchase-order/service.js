@@ -94,7 +94,7 @@ class PurchaseOrderService {
       }
       if (user.data === null) {
         res.status(404)
-        return res.send(errorResponse(404, 'order tidak ditemukan'))
+        return res.send(errorResponse(404, 'company tidak ditemukan'))
       }
       const company = CompanyDto      
       company.id = user.data._id
