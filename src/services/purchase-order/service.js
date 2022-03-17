@@ -59,13 +59,20 @@ class PurchaseOrderService {
           history.qty = items[index].qty
           history.total_amount = items[index].total_amount
           history.description = `Incoming ${items[index].item_name}`
-          history.company = company
+          history.company = company 
+          for (let j = 0; j < data.items.length; j++) {
+              if (data.items[j].item_name == history.name) {
+                history.supplier = data.items[j].supplier
+                continue
+              }
+          }
           history.timestamp = new Date()
           request('POST', TRANSACTION_API + '/admin/history', history, '', authorize)
         }
       }
       data.order_status = orderStatus ?? data.order_status
       data.payment_status = paymentStatus ?? data.payment_status
+      data.company = company ?? data.company
       data.created_at = new Date()
       data.updated_at = new Date()
       await purchaseOrderRepository.updateByID(params, data)
@@ -93,9 +100,11 @@ class PurchaseOrderService {
         item.amount = value.unit_price
         if (value.item_name == 'emet') {
           item.total_amount = value.qty * value.unit_price
+          item.supplier = 'peruri'
         }
         if (value.item_name == 'esgn') {
           item.total_amount = value.qty * value.unit_price
+          item.supplier = 'MTI'
         }
         items.push(item)
       })
