@@ -82,9 +82,16 @@ class PurchaseOrderService {
     try {
       const user = await request('GET', COMPANY_API, '', '', authorize)
       const company = CompanyDto
+      if (!company.data) {
+        res.status(404)
+        return res.send(errorResponse(404, 'company tidak ditemukan'))
+      }
       company.id = user.data._id
       company.image = user.data.image
       company.name = user.data.name
+      company.email = user.data.email
+      company.phone_number = user.data.phone
+      company.contact = user.data.pic_name
       const items = []
       body.items.forEach(value => {
         const item = new ItemDto()
