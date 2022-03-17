@@ -58,7 +58,7 @@ class PurchaseOrderService {
           history.status = 'CR'
           history.qty = items[index].qty
           history.total_amount = items[index].total_amount
-          history.description = `Incoming ${items[index].item_name}`
+          history.description = `Inbound ${items[index].item_name}`
           history.company = company ?? data.company
           for (let j = 0; j < data.items.length; j++) {
               if (data.items[j].item_name == history.name) {
