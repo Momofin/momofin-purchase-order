@@ -3,7 +3,7 @@ const axios = require('axios').default
 async function request (method, path, dto, params = '', authorize) {
   try {
     const data = (await axios({
-      headers: { Authorization: 'Bearer ' + authorize },
+      headers: { Authorization: authorize },
       params: params,
       method,
       url: path,
