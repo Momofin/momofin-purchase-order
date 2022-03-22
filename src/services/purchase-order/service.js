@@ -11,6 +11,7 @@ const { ItemDto } = require('./dto')
 const CompanyDto = require('../../dto/company')
 const HistoryDto = require('../../dto/history')
 const { request } = require('../../helper/http-request')
+const { convertToDate } = require('../../helper/time')
 const { Env } = require('../../config/env-loader')
 const { COMPANY_API, TRANSACTION_API } = Env()
 
@@ -209,6 +210,59 @@ class PurchaseOrderService {
         data.limit,
         data.totalPages,
         data.totalDocs))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
+    }
+  }
+
+  async dashboardData (req, res) {
+    const { period } = req.query
+    var now = new Date()
+
+    try {
+      var query
+      switch (period) {
+        case 'monthly':
+          query = {
+            order_date: {
+              $lte: convertToDate(now),
+              $gte: convertToDate(now.setDate(now.getDate()-30))
+            }
+          }
+          break;
+        default:
+          query = {
+            order_date: {
+              $lte: convertToDate(now),
+              $gte: convertToDate(now.setDate(now.getDate()-7))
+            }
+          }
+          break;
+      }
+      const data = await purchaseOrderRepository.findAllByOrderDate(query)
+
+      let qtyEsgn = 0, qtyEmet = 0
+      let amountEsgn = 0, amountEmet = 0
+      data.forEach(value => {
+        value.items.forEach(item => {
+          if (item.item_name === 'esgn') {
+            qtyEsgn += item.qty
+            amountEsgn += item.amount
+          }
+          if (item.item_name === 'emet') {
+            qtyEmet += item.qty
+            amountEmet += item.amount
+          }
+        })
+      });
+      const response = {
+        emet_qty: qtyEmet,
+        emet_amount: amountEmet,
+        esgn_qty: qtyEsgn,
+        esgn_amount: amountEsgn
+      }
+      return res.send(successResponse(response))
     } catch (error) {
       res.status(400)
       return res.send(errorResponse(400, error.message))
