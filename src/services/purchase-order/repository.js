@@ -44,6 +44,14 @@ class PurchaseOrderRepository {
       return error
     }
   }
+
+  async findAllByOrderDate (query) {
+    try {
+      return this.db.find(query)
+    } catch (error) {
+      return error
+    }
+  }
 }
 
 module.exports = new PurchaseOrderRepository(purchaseOrderSchema)
