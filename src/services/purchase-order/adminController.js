@@ -4,6 +4,7 @@ const service = require('./service')
 
 adminOrderRoutes.get('', async (req, res) => await service.getAll(req, res))
 adminOrderRoutes.get('/dashboard', async (req, res) => await service.dashboardData(req, res))
+adminOrderRoutes.get('/data_count', async (req, res) => await service.countDataOrder(req, res))
 adminOrderRoutes.get('/:id', async (req, res) => await service.getOne(req, res))
 adminOrderRoutes.put('/:id', async (req, res) => await service.update(req, res))
 

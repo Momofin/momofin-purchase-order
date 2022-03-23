@@ -157,7 +157,7 @@ class PurchaseOrderService {
     }
 
     try {
-      const data = await purchaseOrderRepository.findAllBy(omitEmpty(query), options)
+      const data = await purchaseOrderRepository.paginate(omitEmpty(query), options)
       if (data < 1) {
         return res.send(successResponse([]))
       }
@@ -199,7 +199,7 @@ class PurchaseOrderService {
         order_status: status,
         company: company
       }
-      const data = await purchaseOrderRepository.findAllBy(omitEmpty(query), options)
+      const data = await purchaseOrderRepository.paginate(omitEmpty(query), options)
       if (data < 1) {
         return res.send(successResponse([]))
       }
@@ -231,13 +231,15 @@ class PurchaseOrderService {
             }
           }
           break;
-        default:
+        case 'weekly':
           query = {
             order_date: {
               $lte: convertToDate(now),
               $gte: convertToDate(now.setDate(now.getDate()-7))
             }
           }
+          break;
+        default:
           break;
       }
       const data = await purchaseOrderRepository.findAllByOrderDate(query)
@@ -268,6 +270,32 @@ class PurchaseOrderService {
       return res.send(errorResponse(400, error.message))
     }
   }
+  
+  async countDataOrder (req, res) {
+    try {
+      const totalOrder = await purchaseOrderRepository.count()
+      const totalCompletedData = await purchaseOrderRepository.count({
+        order_status: {$ne: 'pending'}
+      })
+      const totalDataPeruri = await purchaseOrderRepository.count({
+        'items.supplier': 'peruri'
+      })
+      const totalDataMti = await purchaseOrderRepository.count({
+        'items.supplier': 'mti'
+      })
+      const response = {
+        total_order: totalOrder,
+        total_completed_data: totalCompletedData,
+        total_order_peruri: totalDataPeruri,
+        total_order_mti: totalDataMti
+      }
+      return res.send(successResponse(response))
+    } catch (error) {
+      res.status(400)
+      return res.send(errorResponse(400, error.message))
+    }
+  }
+
 }
 
 module.exports = new PurchaseOrderService()

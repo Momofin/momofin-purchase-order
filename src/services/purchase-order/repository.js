@@ -21,7 +21,7 @@ class PurchaseOrderRepository {
     }
   }
 
-  async findAllBy (query, option) {
+  async paginate (query, option) {
     try {
       return this.db.paginate(query, option)
     } catch (error) {
@@ -40,6 +40,14 @@ class PurchaseOrderRepository {
   async updateByID (objectId, dto) {
     try {
       return this.db.findByIdAndUpdate(objectId, dto)
+    } catch (error) {
+      return error
+    }
+  }
+
+  async count (query) {
+    try {
+      return this.db.count(query)
     } catch (error) {
       return error
     }
